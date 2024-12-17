@@ -1,0 +1,11 @@
+# dbt specific
+target/
+logs/
+dbt_packages/
+dbt_modules/
+.user.yml
+.env
+
+
+# Virtual Environments
+venv
