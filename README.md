@@ -27,13 +27,6 @@ This README outlines the steps to set up dbt Core with Snowflake and use VS Code
 2. **Create database, schema, and insert data**: Create database, schema, and insert dummy data. Follow these steps. 
    ```sql
    -- CREATE TABLES
-    -- raw_campaigns table
-    CREATE OR REPLACE TABLE raw_impro.raw_campaigns (
-        campaign_id INT,
-        campaign_name VARCHAR,
-        channel VARCHAR
-    );
-
     -- raw_ad_spend table
     CREATE OR REPLACE TABLE raw_impro.raw_ad_spend (
         campaign_id INT,
@@ -49,17 +42,7 @@ This README outlines the steps to set up dbt Core with Snowflake and use VS Code
     );
     
     
-    -- INSERT DATA
-    -- raw_campaigns table
-    INSERT INTO raw_campaigns (campaign_id, campaign_name, channel)
-     VALUES 
-            (1001, 'Welcome back', 'email'),
-            (1002, 'holiday Special', 'Google Ad'),
-            (1003, 'Year End sale', 'Instagram'),
-            (1004, 'winter Promotions', 'Email'),
-            (1005, 'Flash sale', 'google Ad');
-    
-            
+    -- INSERT DATA   
     -- Insert the data into the raw_ad_spend table
     INSERT INTO raw_impro.raw_ad_spend (campaign_id, date, spend)
     WITH
@@ -68,7 +51,7 @@ This README outlines the steps to set up dbt Core with Snowflake and use VS Code
             campaigns.campaign_id,
             DATEADD(DAY, days, '2023-09-01') AS date,
             WEEK(DATEADD(DAY, days, '2023-09-01')) AS weeks,
-            UNIFORM(10, 500, campaigns.campaign_id + days) AS spending
+            UNIFORM(10, 100, campaigns.campaign_id + days) AS spending
         FROM 
             (SELECT column1 AS campaign_id
              FROM VALUES (1001), (1002), (1003), (1004), (1005)) campaigns
@@ -76,44 +59,48 @@ This README outlines the steps to set up dbt Core with Snowflake and use VS Code
             (SELECT seq4() AS days
              FROM TABLE(GENERATOR(ROWCOUNT => 30))) dates
     )
-    
+
     SELECT
         campaign_id,
         date,
         CASE 
-            WHEN weeks = 2 THEN spending * 1.25
-            WHEN weeks = 3 THEN spending * 1.5
+            WHEN weeks = 38 THEN spending + 60.00
+            WHEN weeks = 39 THEN spending + 90.00
             ELSE spending
         END AS spend
     FROM campaign_daily_spend
     ORDER BY campaign_id, date;
-    
-    
+
+
     -- Insert the data into the raw_conversions table
     INSERT INTO raw_impro.raw_conversions (campaign_id, date, conversions)
     WITH
-    
+
     campaign_daily_spend AS (
         SELECT
             campaign_id,
             date,
             WEEK(date) AS weeks,
-            SUM(spend)/3 AS conversion,
+            SUM(spend) * 3 AS conversion,
+            CASE 
+                WHEN weeks = 38 AND campaign_id = 1001 THEN SUM(spend)* 3  + 240
+                WHEN weeks = 39 AND campaign_id = 1001 THEN SUM(spend)* 3  + 430
+                ELSE SUM(spend)* 3 
+            END AS convert
         FROM 
             raw_ad_spend
         GROUP BY 
             date, campaign_id 
     ),
-    
+
     final AS (
         SELECT
             campaign_id,
             date,
             CASE 
-                WHEN weeks = 2 THEN conversion * 2
-                WHEN weeks = 3 THEN conversion * 2.5
-                ELSE conversion
-            END AS conversions
+                WHEN campaign_id = 1001 OR campaign_id = 1004 THEN convert + 140
+                ELSE convert
+            END AS conversion
         FROM
             campaign_daily_spend
     )

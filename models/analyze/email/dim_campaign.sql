@@ -9,6 +9,7 @@ WITH
 
 ad_spend AS (
     SELECT
+        campaign_key,
         campaign_id,
         campaign_date
     FROM 
@@ -26,6 +27,7 @@ campaigns AS (
 
 final AS(
     SELECT
+        ad_spend.campaign_key,
         ad_spend.campaign_id,
         campaigns.campaign_name,
         campaigns.campaign_channel,

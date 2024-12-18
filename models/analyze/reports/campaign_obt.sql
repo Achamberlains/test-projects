@@ -33,7 +33,10 @@ final AS (
         dim_campaign.campaign_channel,
         fact_campaign.campaign_ad_spend,
         fact_campaign.campaign_conversion,
-        ROUND((fact_campaign.campaign_conversion/fact_campaign.campaign_ad_spend), 2) AS conversion_rate,
+        -- For the purpose of this exercise I am following the conversion rate calc provided.
+        -- Because this would be a larger % number I'm going to divide by 100
+        -- Typically, conversion rate can be calculated by total conversions / total vistors * 100
+        ROUND(((fact_campaign.campaign_conversion/fact_campaign.campaign_ad_spend)/100), 2) AS conversion_rate,
         ROUND(((fact_campaign.campaign_conversion * 100)/fact_campaign.campaign_ad_spend), 2) AS ROAS,
         dim_campaign.campaign_date
     FROM dim_campaign
