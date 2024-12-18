@@ -9,8 +9,8 @@ WITH
 clean_campaigns AS (
     SELECT
         campaign_id,
-        campaign_name,
-        channel
+        INITCAP(campaign_name) AS campaign_name,
+        INITCAP(channel) AS channel
     FROM
         {{ref('stg_campaigns')}}
 )
