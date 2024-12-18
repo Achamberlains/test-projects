@@ -11,8 +11,8 @@ stg_campaigns AS (
         campaign_id,
         campaign_name,
         channel
-    FROM 
-        {{ ref('raw_campaigns') }}
+    FROM
+        {{ ref('campaign_raw') }}
 )
 
 SELECT * FROM stg_campaigns

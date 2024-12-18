@@ -33,7 +33,8 @@ final AS (
         dim_campaign.campaign_channel,
         fact_campaign.campaign_ad_spend,
         fact_campaign.campaign_conversion,
-        ROUND((fact_campaign.campaign_ad_spend/fact_campaign.campaign_conversion), 2) AS ad_spend_per_conversion,
+        ROUND((fact_campaign.campaign_conversion/fact_campaign.campaign_ad_spend), 2) AS conversion_rate,
+        ROUND(((fact_campaign.campaign_conversion * 100)/fact_campaign.campaign_ad_spend), 2) AS ROAS,
         dim_campaign.campaign_date
     FROM dim_campaign
     LEFT JOIN fact_campaign

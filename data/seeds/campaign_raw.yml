@@ -1,0 +1,28 @@
+version: 2
+
+seeds:
+  - name: campaign_raw
+    description: "A list of all Canadian provinces, including their abbreviations and long names." 
+    config: 
+      database: ingest
+      schema: raw_impro
+      full-refresh: false 
+
+    columns:
+      - name: campaign_id
+        description: "The unique identifer for campaigns."
+        tests: 
+          - not_null
+          - unique
+
+      - name: campaign_name
+        description: "The unique campaign name."
+        tests: 
+          - not_null
+          - unique
+
+      - name: channel
+        description: "The source in which the campaign is shared."
+        tests: 
+          - not_null
+          - unique 

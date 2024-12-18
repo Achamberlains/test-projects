@@ -2,12 +2,15 @@ version: 2
 
 models:
   - name: campaign_obt 
-    description: "This table tracks details about marketing campaigns including campaign name, channel, spend, conversions, and performance metrics."
+    description: "This table tracks details about marketing campaigns including the campaigns name, channel of distribution, spend, conversions, and performance metrics."
     columns:
       - name: campaign_id 
         description: "Unique identifier for each campaign."
         tests: 
           - not_null
+          - relationships:
+              to: ref('dim_campaign')
+              field: campaign_id
 
       - name: campaign_name 
         description: "The name of the campaign (e.g., specific promotions or seasonal events)."
@@ -33,8 +36,13 @@ models:
         tests: 
           - not_null
 
-      - name: ad_spend_per_conversion
-        description: "Calculated metric representing the ad spend per conversion."
+      - name: conversion_rate
+        description: "Calculated metric representing the rate in which a user converts via the campaign."
+        tests: 
+          - not_null
+
+      - name: ROAS
+        description: "The return on ad spend for that day by campaign."
         tests: 
           - not_null
 
@@ -42,3 +50,6 @@ models:
         description: "The date when the campaign was launched, ad was paid for and conversions occured."
         tests: 
           - not_null
+          - relationships:
+              to: ref('dim_campaign')
+              field: campaign_date

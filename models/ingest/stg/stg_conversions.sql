@@ -11,7 +11,7 @@ stg_conversions AS (
         campaign_id,
         date,
         conversions
-    FROM   
+    FROM
         {{ ref('raw_conversions') }}
 )
 

@@ -11,7 +11,7 @@ stg_ad_spend AS (
         campaign_id,
         date,
         spend
-    FROM 
+    FROM
         {{ ref('raw_ad_spend') }}
 )
 
