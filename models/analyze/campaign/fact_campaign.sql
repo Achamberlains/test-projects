@@ -1,6 +1,6 @@
 {{ config(
     database = 'analyze',
-    schema = 'email',
+    schema = 'campaign',
     alias = 'fact_campaigns'
 ) }}
 
