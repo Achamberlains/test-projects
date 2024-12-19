@@ -56,5 +56,8 @@ models:
         tests: 
           - not_null
           - relationships:
-              to: ref('dim_campaign')
+              to: ref('fact_campaign')
               field: campaign_date
+          - test_date_range:
+              start_date: '2023-09-01'
+              end_date: '2023-09-30'

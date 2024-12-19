@@ -1,0 +1,64 @@
+version: 2
+
+models:
+  - name: stg_ad_spend
+    description: "A staging model for ad spend data. Casts raw data into proper data types."
+    columns:
+      - name: campaign_id
+        description: "An identifier for the campaign."
+        tests:
+          - not_null
+      - name: date
+        description: "The date of the ad spend activity."
+        tests:
+          - not_null
+          - test_date_range:
+              start_date: '2023-09-01'
+              end_date: '2023-09-30'
+      - name: spend
+        description: "The amount spent on the ad campaign, stored as a decimal value."
+        tests:
+          - not_null
+          - accepted_range:
+              min_value: 0
+
+  - name: stg_campaigns
+    description: "A staging model for campaign data. Standardizes raw data into proper types and format."
+    columns:
+      - name: campaign_id
+        description: "A unique identifier for the campaign."
+        tests:
+          - not_null
+          - unique
+      - name: campaign_name
+        description: "The name of the campaign."
+        tests:
+          - not_null
+          - unique
+      - name: channel
+        description: "The channel through which the campaign is conducted, e.g., Email, Social Media."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Email', 'Instagram', 'Google Ad']
+
+  - name: stg_conversions
+    description: "A staging model for conversion data. Casts raw data into appropriate data types."
+    columns:
+      - name: campaign_id
+        description: "An identifier for the campaign."
+        tests:
+          - not_null
+      - name: date
+        description: "The date of the conversions."
+        tests:
+          - not_null
+          - test_date_range:
+              start_date: '2023-09-01'
+              end_date: '2023-09-30'
+      - name: conversions
+        description: "The number of conversions recorded for the campaign on the given date."
+        tests:
+          - not_null
+          - accepted_range:
+              min_value: 0

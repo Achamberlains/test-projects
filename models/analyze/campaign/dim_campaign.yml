@@ -1,0 +1,33 @@
+version: 2
+
+models:
+  - name: dim_campaigns
+    description: "A dimension table that combines ad spend and campaign ids and keys, including campaign IDs, names, and channels."
+    columns:
+      - name: campaign_key
+        description: "Primary key for the campaigns sent on a specific day, used to uniquely identify a campaign."
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              to: ref('normalize_ad_spend')
+              field: campaign_ad_spend
+
+      - name: campaign_id
+        description: "Identifier for the campaign, linking ad spend and campaigns."
+        tests:
+          - not_null
+
+      - name: campaign_name
+        description: "Name of the campaign, such as 'Holiday Sale' or 'Flash Sale'."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Holiday Sale', 'Flash Sale', 'Welcome Back', 'Year End Sale']
+
+      - name: campaign_channel
+        description: "Channel through which the campaign is conducted, such as Email or Social Media."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Email', 'Instagram', 'Google Ads']

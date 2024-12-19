@@ -1,0 +1,72 @@
+version: 2
+
+models:
+  - name: normalize_ad_spend
+    description: "A normalized dataset for ad spend data. Includes a surrogate key and standardizes column names."
+    columns:
+      - name: campaign_key
+        description: "A surrogate key generated from campaign_id and date."
+        tests:
+          - not_null
+          - unique
+      - name: campaign_id
+        description: "An identifier for the campaign."
+        tests:
+          - not_null
+      - name: campaign_ad_spend
+        description: "The amount spent on the campaign, normalized with consistent naming."
+        tests:
+          - not_null
+          - accepted_range:
+              min_value: 0
+      - name: campaign_date
+        description: "The date of the ad spend activity."
+        tests:
+          - not_null
+          - test_date_range:
+              start_date: '2023-09-01'
+              end_date: '2023-09-30'
+
+  - name: normalize_campaigns
+    description: "A normalized dataset for campaign information. Standardizes naming conventions."
+    columns:
+      - name: campaign_id
+        description: "An identifier for the campaign."
+        tests:
+          - not_null
+      - name: campaign_name
+        description: "The name of the campaign."
+        tests:
+          - not_null
+      - name: campaign_channel
+        description: "The channel of the campaign, normalized with consistent naming."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Email', 'Instagram', 'Google Ad']
+
+  - name: normalize_conversions
+    description: "A normalized dataset for conversion data. Includes a surrogate key and standardized column names."
+    columns:
+      - name: campaign_key
+        description: "A surrogate key generated from campaign_id and date."
+        tests:
+          - not_null
+          - unique
+      - name: campaign_id
+        description: "An identifier for the campaign."
+        tests:
+          - not_null
+      - name: campaign_conversion
+        description: "The number of conversions recorded for the campaign."
+        tests:
+          - not_null
+          - accepted_range:
+              min_value: 0
+      - name: campaign_date
+        description: "The date of the conversion activity."
+        tests:
+          - not_null
+          - test_date_range:
+              start_date: '2023-09-01'
+              end_date: '2023-09-30'

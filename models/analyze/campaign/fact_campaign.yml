@@ -1,0 +1,43 @@
+version: 2
+
+models:
+  - name: fact_campaigns
+    description: "A fact table that combines ad spend, campaign details, and conversion metrics, providing a comprehensive view of campaign performance."
+    columns:
+      - name: campaign_key
+        description: "Primary key for the campaigns, used to uniquely identify each campaign record by date."
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              to: ref('normalize_ad_spend')
+              field: campaign_ad_spend
+
+      - name: campaign_id
+        description: "Identifier for the campaign, linking ad spend, campaign details, and conversions."
+        tests:
+          - not_null
+
+      - name: campaign_ad_spend
+        description: "The amount of money spent on advertising for the campaign."
+        tests:
+          - not_null
+          - accepted_range:
+              min_value: 0
+              max_value: 100000
+
+      - name: campaign_conversion
+        description: "The number of conversions attributed to the campaign."
+        tests:
+          - not_null
+          - accepted_range:
+              min_value: 0
+              max_value: 100000
+
+      - name: campaign_date
+        description: "The date of the campaign activity or conversion."
+        tests:
+          - not_null
+          - test_date_range:
+              start_date: '2023-09-01'
+              end_date: '2023-09-30'
