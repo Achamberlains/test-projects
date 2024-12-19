@@ -1,0 +1,60 @@
+version: 2
+
+models:
+  - name: campaign_obt 
+    description: "This table tracks details about marketing campaigns including the campaigns name, channel of distribution, spend, conversions, and performance metrics."
+    columns:
+      - name: campaign_id 
+        description: "Unique identifier for each campaign."
+        tests: 
+          - not_null
+          - relationships:
+              to: ref('dim_campaign')
+              field: campaign_id
+
+      - name: campaign_name 
+        description: "The name of the campaign (e.g., specific promotions or seasonal events)."
+        tests: 
+          - not_null
+          - accepted_values:
+              values: ['Welcome Back', 'Holiday Special', 'Year End Sale', 'Winter Promotions', 'Flash Sale']
+
+      - name: campaign_channel
+        description: "The channel used for the campaign (e.g., Email, Instagram, or Google Ads)."
+        tests: 
+          - not_null
+          - accepted_values:
+              values: ['Email', 'Instagram', 'Google Ad']
+
+      - name: campaign_ad_spend
+        description: "Ad spend associated with campaign."
+        tests: 
+          - not_null
+
+      - name: campaign_conversion
+        description: "The total number of conversions attributed to the campaign."
+        tests: 
+          - not_null
+
+      - name: campaign_revenue
+        description: "The total revenue aquired by all campaigns."
+        tests: 
+          - not_null
+
+      - name: conversion_rate
+        description: "Calculated metric representing the rate in which a user converts via the campaign."
+        tests: 
+          - not_null
+
+      - name: ROAS
+        description: "The return on ad spend for that day by campaign."
+        tests: 
+          - not_null
+
+      - name: campaign_date 
+        description: "The date when the campaign was launched, ad was paid for and conversions occured."
+        tests: 
+          - not_null
+          - relationships:
+              to: ref('dim_campaign')
+              field: campaign_date

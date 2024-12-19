@@ -15,13 +15,96 @@ This README outlines the steps to set up dbt Core with Snowflake and use VS Code
 
 ## 1. Set Up Snowflake
 
-1. **Create a User and Role**: Set up a dedicated user and role in Snowflake. I have used `film_db` database which was already created before and the role `analyst` has access to it but if you want to create a new database then follow these steps. 
+1. **Create a User and Role**: Set up a dedicated user and role in Snowflake. To start. I have used `impro_dev_ingest` database and the role `sysadmin` has access to it but if you want to create a new database then follow these steps. 
    ```sql
    CREATE DATABASE dbt_db;
    CREATE SCHEMA dbt_schema;
    GRANT USAGE ON DATABASE dbt_db TO ROLE dbt_role;
    GRANT USAGE ON SCHEMA dbt_db.dbt_schema TO ROLE dbt_role;
    GRANT CREATE TABLE, CREATE VIEW, SELECT ON SCHEMA dbt_db.dbt_schema TO ROLE dbt_role;
+   ```
+
+2. **Create database, schema, and insert data**: Create database, schema, and insert dummy data. Follow these steps. 
+   ```sql
+   -- CREATE TABLES
+    -- raw_ad_spend table
+    CREATE OR REPLACE TABLE raw_impro.raw_ad_spend (
+        campaign_id INT,
+        date DATE,
+        spend DECIMAL (10, 2)
+    );
+
+    -- raw_conversions table
+    CREATE OR REPLACE TABLE raw_impro.raw_conversions (
+        campaign_id INT,
+        date DATE,
+        conversions INT
+    );
+    
+    
+    -- INSERT DATA   
+    -- Insert the data into the raw_ad_spend table
+    INSERT INTO raw_impro.raw_ad_spend (campaign_id, date, spend)
+    WITH
+    campaign_daily_spend AS (
+        SELECT
+            campaigns.campaign_id,
+            DATEADD(DAY, days, '2023-09-01') AS date,
+            WEEK(DATEADD(DAY, days, '2023-09-01')) AS weeks,
+            UNIFORM(10, 100, campaigns.campaign_id + days) AS spending
+        FROM 
+            (SELECT column1 AS campaign_id
+             FROM VALUES (1001), (1002), (1003), (1004), (1005)) campaigns
+        CROSS JOIN 
+            (SELECT seq4() AS days
+             FROM TABLE(GENERATOR(ROWCOUNT => 30))) dates
+    )
+
+    SELECT
+        campaign_id,
+        date,
+        CASE 
+            WHEN weeks = 38 THEN spending + 60.00
+            WHEN weeks = 39 THEN spending + 90.00
+            ELSE spending
+        END AS spend
+    FROM campaign_daily_spend
+    ORDER BY campaign_id, date;
+
+
+    -- Insert the data into the raw_conversions table
+    INSERT INTO raw_impro.raw_conversions (campaign_id, date, conversions)
+    WITH
+
+    campaign_daily_spend AS (
+        SELECT
+            campaign_id,
+            date,
+            WEEK(date) AS weeks,
+            SUM(spend) * 3 AS conversion,
+            CASE 
+                WHEN weeks = 38 AND campaign_id = 1001 THEN SUM(spend)* 3  + 240
+                WHEN weeks = 39 AND campaign_id = 1001 THEN SUM(spend)* 3  + 430
+                ELSE SUM(spend)* 3 
+            END AS convert
+        FROM 
+            raw_ad_spend
+        GROUP BY 
+            date, campaign_id 
+    ),
+
+    final AS (
+        SELECT
+            campaign_id,
+            date,
+            CASE 
+                WHEN campaign_id = 1001 OR campaign_id = 1004 THEN convert + 140
+                ELSE convert
+            END AS conversion
+        FROM
+            campaign_daily_spend
+    )
+    SELECT * FROM final;
    ```
 
 ---
@@ -61,7 +144,7 @@ This will prompt the user to add details like schema name, db, username and pass
 
 
 3. **Set Environment Variables**:
-   Create/copy the `.env` file. Add your username and password but make sure you don't push the username/password on Github.
+   Create/copy the `.env` file. Add your username and password but make sure you don't push the username/password on Github. Add this to `.gitignore`
 
 ---
 
