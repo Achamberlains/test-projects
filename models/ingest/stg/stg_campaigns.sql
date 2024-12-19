@@ -8,9 +8,9 @@
 WITH  
 stg_campaigns AS (
     SELECT
-        campaign_id,
-        campaign_name,
-        channel
+        CAST(campaign_id AS INT) AS campaign_id,
+        CAST(campaign_name AS VARCHAR) AS campaign_name,
+        CAST(channel AS VARCHAR) AS channel
     FROM
         {{ ref('campaign_raw') }}
 )

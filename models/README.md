@@ -37,7 +37,7 @@ This document provides an overview of the DBT models in this project and are org
 
 
 
-## 3. Clean
+## 2. Clean
 
 **clean_ad_spend.sql**:
 
@@ -59,7 +59,8 @@ This document provides an overview of the DBT models in this project and are org
 - No transformations are done for this table in clean.
 
 
-## 2. Normalize
+
+## 3. Normalize
 
 **normalize_ad_spend.sql**:
 
@@ -133,10 +134,7 @@ This document provides an overview of the DBT models in this project and are org
     ROUND(((fact_campaign.campaign_conversion * 100)/fact_campaign.campaign_ad_spend), 2) AS ROAS,
     ```
 
-
 **campaign_obt.yml**:
 
 - Contains tests for the campaign_obt model as well as documentation and descriptions.
 - Ensures data integrity with tests like not_null and accepted_values.
-
-**For more information regarding this project, checkout the docs** http://localhost:8080/#!/overview/dbt_expectations

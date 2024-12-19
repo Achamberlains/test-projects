@@ -8,9 +8,9 @@
 WITH  
 stg_conversions AS (
     SELECT
-        campaign_id,
-        date,
-        conversions
+        CAST(campaign_id AS INT) AS campaign_id,
+        CAST(date AS DATE) AS date,
+        CAST(conversions AS INT) AS conversions
     FROM
         {{ ref('raw_conversions') }}
 )

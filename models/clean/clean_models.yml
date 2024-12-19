@@ -1,0 +1,63 @@
+version: 2
+
+models:
+  - name: clean_ad_spend
+    description: "A cleaned dataset for ad spend data. This model selects relevant fields from the staging table."
+    columns:
+      - name: campaign_id
+        description: "An identifier for each campaign."
+        tests:
+          - not_null
+      - name: spend
+        description: "The amount spent on the campaign."
+        tests:
+          - not_null
+          - accepted_range:
+              min_value: 0
+      - name: date
+        description: "The date of the ad spend activity."
+        tests:
+          - not_null
+          - test_date_range:
+              start_date: '2023-09-01'
+              end_date: '2023-09-30'
+
+  - name: clean_campaigns
+    description: "A cleaned dataset for campaign information. Formats campaign names and channels with proper capitalization."
+    columns:
+      - name: campaign_id
+        description: "A unique identifier for each campaign."
+        tests:
+          - not_null
+          - unique
+      - name: campaign_name
+        description: "The name of the campaign, formatted with proper capitalization."
+        tests:
+          - not_null
+      - name: channel
+        description: "The channel of the campaign, e.g., Email, Social Media."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Email', 'Instagram', 'Google Ad']
+
+  - name: clean_conversions
+    description: "A cleaned dataset for conversion data. This model selects relevant fields from the staging table."
+    columns:
+      - name: campaign_id
+        description: "An identifier for each campaign."
+        tests:
+          - not_null
+      - name: conversions
+        description: "The number of conversions recorded for the campaign."
+        tests:
+          - not_null
+          - accepted_range:
+              min_value: 0
+      - name: date
+        description: "The date of the conversion activity."
+        tests:
+          - not_null
+          - test_date_range:
+              start_date: '2023-09-01'
+              end_date: '2023-09-30'
