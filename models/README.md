@@ -37,7 +37,7 @@ This document provides an overview of the DBT models in this project and are org
 
 
 
-## 3. Clean
+## 2. Clean
 
 **clean_ad_spend.sql**:
 
@@ -59,7 +59,8 @@ This document provides an overview of the DBT models in this project and are org
 - No transformations are done for this table in clean.
 
 
-## 2. Normalize
+
+## 3. Normalize
 
 **normalize_ad_spend.sql**:
 
@@ -98,10 +99,11 @@ This document provides an overview of the DBT models in this project and are org
     date AS campaign_date
     ```
 
+
+
 ## 4. Analyze
 
 4.1. **Email**
-
 
 **dim_campaign.sql**:
 
