@@ -1,6 +1,8 @@
-#DBT ModelsL: Documentation
+# DBT ModelsL: Documentation
 
 This document provides an overview of the DBT models in this project and are organized by their respective directories. Each directory represents a step in the data pipeline.
+
+
 
 ## 1. Ingest
 
@@ -8,102 +10,116 @@ This document provides an overview of the DBT models in this project and are org
 
 **raw_ad_spend.sql**:
 
-- **Loads** raw advertising spend data from the source systems.
+- **Loads** raw advertising spend data from Snowflake.
 
-- Acts as the **foundation** for further cleaning and transformations.
 
 **raw_conversions.sql**:
 
-- **Loads** raw conversions data from the source systems.
+- **Loads** raw conversions data from Snowflake
+- Used to track **conversions** at a granular level.
 
-Used to track conversions at a granular level.
 
-1.2. Staging (stg)
+1.2. **Staging (stg)**
 
-stg_ad_spend.sql:
+**stg_ad_spend.sql**:
 
-Stages the raw ad spend data, applying basic transformations such as renaming columns and ensuring consistent data types.
+- **Stages** the raw ad spend data, applying basic transformations such as renaming columns and ensuring consistent data types.
 
-Prepares data for normalization and further processing.
 
-stg_campaigns.sql:
+**stg_campaigns.sql**:
 
-Stages campaign data, creating a standardized format.
+- **Stages** campaign data, creating a standardized format. There is not raw table as the data is brought in via seed.
 
-Ensures data consistency before joining with other datasets.
 
-stg_conversions.sql:
+**stg_conversions.sql**:
 
-Stages conversion data with basic cleaning and formatting.
+- **Stages** conversion data with basic cleaning and formatting.
 
-Ensures compatibility with downstream transformations.
 
-2. Normalize
 
-normalize_ad_spend.sql:
+## 3. Clean
 
-Transforms and normalizes ad spend data into a consistent schema.
+**clean_ad_spend.sql**:
 
-Handles missing values, outliers, and duplicates.
+- No transformations are done for this table in clean.
 
-normalize_campaigns.sql:
 
-Normalizes campaign data by ensuring uniform campaign attributes.
+**clean_campaigns.sql**:
 
-Maps campaigns to their unique identifiers.
+- **Cleans** campaign data, ensuring data quality and usability.
+- **Applies** an INITCAP on both name and channel for reporting clarity and consistency.
+    ```sql
+    -- Renaming columns
+        INITCAP(campaign_name) AS campaign_name,
+        INITCAP(channel) AS channel
+    ```
 
-normalize_conversions.sql:
+**clean_conversions.sql**:
 
-Normalizes conversion data to match the schema of the normalized datasets.
+- No transformations are done for this table in clean.
 
-Adds derived columns for easier analysis.
 
-3. Clean
+## 2. Normalize
 
-clean_ad_spend.sql:
+**normalize_ad_spend.sql**:
 
-Cleans normalized ad spend data by applying business logic.
+- **Generates Surrogate Key** is added to ensure uniqueness and simplify joins. The campaign id and date are used to create a unique identifier for specific campaings shared daily.
+    ```sql
+    -- Creating Primary Key
+    {{ generate_surrogate_key(['campaign_id', 'date']) }} AS campaign_key,
+    ```
 
-Prepares data for final aggregation and analysis.
+- **Transforms** and **Normalizes** ad spend data, adding business context and renaming columns.
+    ```sql
+    -- Renaming columns
+    spend AS campaign_ad_spend,
+    date AS campaign_date
+    ```
 
-clean_campaigns.sql:
+**normalize_campaigns.sql**:
 
-Cleans normalized campaign data, ensuring data quality and usability.
+- **Transforms** and **Normalizes** campaign data, adding business context and renaming columns.
+    ```sql
+    -- Renaming columns
+    channel AS campaign_channel
+    ```
 
-Removes redundant records and validates campaign attributes.
+**normalize_conversions.sql**:
 
-clean_conversions.sql:
+- **Transforms** and **Normalizes** conversion data, adding business context and renaming columns.
+    ```sql
+    -- Creating Primary Key
+    {{ generate_surrogate_key(['campaign_id', 'date']) }} AS campaign_key,
+    ```
+- **Generates Surrogate Key** is added to ensure uniqueness and simplify joins. The campaign id and date are used to create a unique identifier for specific campaings shared daily.
+    ```sql
+    -- Renaming columns
+    conversions AS campaign_conversion,
+    date AS campaign_date
+    ```
 
-Cleans normalized conversion data to ensure data quality.
+## 4. Analyze
 
-Handles invalid or inconsistent conversion records.
+4.1. **Email**
 
-4. Analyze
 
-4.1. Email
+**dim_campaign.sql**:
 
-dim_campaign.sql:
+- A **dimension table** for campaign metadata.Contains attributes like campaign name, channel, and date.
 
-Creates a dimension table for campaign metadata.
+**fact_campaign.sql**:
 
-Contains attributes like campaign name, channel, and date.
+- A **fact table** that captures metrics such as ad spend and conversions.
+- Provides granular metrics for detailed analysis.
 
-fact_campaign.sql:
+4.2. **Reports**
 
-Creates a fact table that captures metrics such as ad spend and conversions.
+**campaign_obt.sql**:
 
-Provides granular metrics for detailed analysis.
+- Combines data from the dimension and fact tables to create an One Big Table **(OBT)**.
+- Includes derived metrics like ad spend per conversion.
 
-4.2. Reports
+**campaign_obt.yml**:
 
-campaign_obt.sql:
-
-Combines data from the dimension and fact tables to create an overall business table (OBT).
-
-Includes derived metrics like ad spend per conversion.
-
-campaign_obt.yml:
-
-Contains tests and metadata for the campaign_obt model.
-
-Ensures data integrity with tests like not_null and accepted_values.
+- Contains tests for the campaign_obt model as well as documentation and descriptions.
+- Ensures data integrity with tests like not_null and accepted_values.
