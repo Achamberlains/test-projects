@@ -4,42 +4,21 @@
     alias = 'fact_campaigns'
 ) }}
 
-WITH
-
-ad_spend AS (
     SELECT
-        campaign_key,
-        campaign_id,
-        campaign_ad_spend,
-        campaign_date
-    FROM 
-        {{ref('normalize_ad_spend')}}
-),
-
-conversion AS (
-    SELECT
-        campaign_key,
-        campaign_id,
-        campaign_conversion,
-        campaign_date
-        FROM
-            {{ref('normalize_conversions')}}
-),
-
-final AS(
-    SELECT
+        -- Primary key
         ad_spend.campaign_key,
+
+        -- IDs
         campaigns.campaign_id,
+
+        -- Attributes
         ad_spend.campaign_ad_spend,
         conversion.campaign_conversion,
         conversion.campaign_date
-    FROM ad_spend
+    FROM {{ref('normalize_ad_spend')}} ad_spend
     LEFT JOIN {{ref('normalize_campaigns')}} campaigns
         ON ad_spend.campaign_id = campaigns.campaign_id
-    LEFT JOIN conversion
+    LEFT JOIN {{ref('normalize_conversions')}} conversion
         ON ad_spend.campaign_key = conversion.campaign_key
         --AND ad_spend.campaign_id = conversion.campaign_id
         --AND ad_spend.campaign_date = conversion.campaign_date
-)
-
-SELECT * FROM final

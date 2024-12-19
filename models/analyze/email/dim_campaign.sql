@@ -5,36 +5,17 @@
     materialized='table'
 ) }}
 
-WITH  
-
-ad_spend AS (
     SELECT
-        campaign_key,
-        campaign_id,
-        campaign_date
-    FROM 
-        {{ref('normalize_ad_spend')}}
-),
-
-campaigns AS (
-    SELECT
-        campaign_id,
-        campaign_name,
-        campaign_channel
-    FROM
-        {{ref('normalize_campaigns')}}
-),
-
-final AS(
-    SELECT
+        -- Primary key
         ad_spend.campaign_key,
+
+        -- IDs
         ad_spend.campaign_id,
+
+        -- Attributes
         campaigns.campaign_name,
         campaigns.campaign_channel,
         ad_spend.campaign_date
-    FROM ad_spend
-    LEFT JOIN campaigns
+    FROM {{ref('normalize_ad_spend')}} ad_spend
+    LEFT JOIN {{ref('normalize_campaigns')}} campaigns
         ON ad_spend.campaign_id = campaigns.campaign_id
-)
-
-SELECT * FROM final

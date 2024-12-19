@@ -8,9 +8,14 @@
 WITH  
 clean_ad_spend AS (
     SELECT
+        -- IDs
         campaign_id,
-        date,
-        spend
+
+        -- Field
+        spend,
+        
+        -- Date
+        date
     FROM 
         {{ref('stg_ad_spend')}}
 )

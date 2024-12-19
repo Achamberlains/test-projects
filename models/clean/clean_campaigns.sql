@@ -8,7 +8,10 @@
 WITH  
 clean_campaigns AS (
     SELECT
+        -- IDs
         campaign_id,
+
+        -- Fields
         INITCAP(campaign_name) AS campaign_name,
         INITCAP(channel) AS channel
     FROM

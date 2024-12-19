@@ -36,6 +36,11 @@ models:
         tests: 
           - not_null
 
+      - name: campaign_revenue
+        description: "The total revenue aquired by all campaigns."
+        tests: 
+          - not_null
+
       - name: conversion_rate
         description: "Calculated metric representing the rate in which a user converts via the campaign."
         tests: 

@@ -8,10 +8,15 @@
 WITH  
 clean_conversions AS (
     SELECT
+        -- IDs
         campaign_id,
-        date,
-        conversions
-        FROM
+
+        -- Field
+        conversions,
+
+        -- Date
+        date
+    FROM
             {{ref('stg_conversions')}}
 )
 
