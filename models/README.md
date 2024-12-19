@@ -63,7 +63,7 @@ This document provides an overview of the DBT models in this project and are org
 
 **normalize_ad_spend.sql**:
 
-- **Generates Surrogate Key** is added to ensure uniqueness and simplify joins. The campaign id and date are used to create a unique identifier for specific campaings shared daily.
+- **Generates Surrogate Key** is added to ensure uniqueness and to simplify joins. The campaign id and date are used to create a unique identifier for specific campaings shared daily.
     ```sql
     -- Creating Primary Key
     {{ generate_surrogate_key(['campaign_id', 'date']) }} AS campaign_key,
@@ -86,30 +86,31 @@ This document provides an overview of the DBT models in this project and are org
 
 **normalize_conversions.sql**:
 
-- **Transforms** and **Normalizes** conversion data, adding business context and renaming columns.
+- **Generates Surrogate Key** is added to ensure uniqueness and simplify joins. The campaign id and date are used to create a unique identifier for specific campaings shared daily.
     ```sql
     -- Creating Primary Key
     {{ generate_surrogate_key(['campaign_id', 'date']) }} AS campaign_key,
     ```
-- **Generates Surrogate Key** is added to ensure uniqueness and simplify joins. The campaign id and date are used to create a unique identifier for specific campaings shared daily.
+
+- **Transforms** and **Normalizes** conversion data, adding business context and renaming columns.
     ```sql
     -- Renaming columns
     conversions AS campaign_conversion,
     date AS campaign_date
     ```
 
+
 ## 4. Analyze
 
 4.1. **Email**
 
-
 **dim_campaign.sql**:
 
-- A **dimension table** for campaign metadata.Contains attributes like campaign name, channel, and date.
+- A **dimension table** for all idss and keys related to campaigns. It also contains attributes like campaign name and channel.
 
 **fact_campaign.sql**:
 
-- A **fact table** that captures metrics such as ad spend and conversions.
+- A **fact table** that captures metrics such as ad spend, conversions and date.
 - Provides granular metrics for detailed analysis.
 
 4.2. **Reports**
@@ -117,9 +118,25 @@ This document provides an overview of the DBT models in this project and are org
 **campaign_obt.sql**:
 
 - Combines data from the dimension and fact tables to create an One Big Table **(OBT)**.
-- Includes derived metrics like ad spend per conversion.
+    ```sql
+    -- Metrics
+    FROM dim_campaign
+    LEFT JOIN fact_campaign
+        ON dim_campaign.campaign_id = fact_campaign.campaign_id
+        AND dim_campaign.campaign_date = fact_campaign.campaign_date
+    ```
+- Includes derived metrics like conversion rate.
+    ```sql
+    -- Metrics
+    ROUND((fact_campaign.campaign_conversion * 100), 2) AS campaign_revenue,
+    ROUND((fact_campaign.campaign_conversion/fact_campaign.campaign_ad_spend), 2) AS conversion_rate,
+    ROUND(((fact_campaign.campaign_conversion * 100)/fact_campaign.campaign_ad_spend), 2) AS ROAS,
+    ```
+
 
 **campaign_obt.yml**:
 
 - Contains tests for the campaign_obt model as well as documentation and descriptions.
 - Ensures data integrity with tests like not_null and accepted_values.
+
+**For more information regarding this project, checkout the docs** http://localhost:8080/#!/overview/dbt_expectations
