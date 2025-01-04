@@ -46,7 +46,7 @@ VALUES
 (24, 10, 1002, 'https://www.example.com/product-page?utm_campaign=fall_promo&utm_medium=email&utm_source=newsletter&utm_content=header_banner&utm_term=discount_code&utm_lid=12349', 'bounced', 0, 0.10, '2023-09-15 14:00:00'),
 (25, 11, 1002, 'https://www.example.com/product-page?utm_campaign=fall_promo&utm_medium=email&utm_source=newsletter&utm_content=header_banner&utm_term=discount_code&utm_lid=12350', 'bounced', 0, 0.10, '2023-09-15 14:00:00');
 
---utm_lid could also be used similarly to a recipient_id as the lid # is a unique id of the link specifically sent to that recipient.
+--utm_lid could also be used as a unique identifier, similar to a recipient_id as the lid # is a unique id of the link specifically sent to that recipient.
 WITH event_data AS (
 	SELECT
 		event_id,
