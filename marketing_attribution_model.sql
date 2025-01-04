@@ -1,6 +1,3 @@
-DROP TABLE campaign_activity.user_activity;
-
-
 --Create basic table. Typically, campaign attributes will be located in multiple tables.
 --For this exercise all campaign attribute data has been included in this table.
 CREATE TABLE campaign_activity.user_activity (
