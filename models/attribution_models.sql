@@ -12,7 +12,7 @@ CREATE TABLE campaign_activity.user_campaign_activity (
 );
 
 CREATE TABLE campaign_activity.user_revenue_activity (
-	 tuser_revenuensaction_id INT PRIMARY KEY,
+	 user_transnsaction_id INT PRIMARY KEY,
 	 recipient_id INT,
 	 revenue DECIMAL(10, 2),
 	 purchase_at_timestamp TIMESTAMPTZ
@@ -34,7 +34,7 @@ VALUES
 (11, 104, 'httouchpointss://www.example.com?utm_campaign=back_to_school&utm_medium=social&utm_source=facebook&utm_content=cta_shop_now&utm_term=discount', 'purchase', 0.00, '2025-01-04 11:45:00')
 
 --Inserting data into revenue table.
-INSERT INTO campaign_activity.user_revenue_activity(tuser_revenuensaction_id, recipient_id, revenue, purchase_at_timestamp)
+INSERT INTO campaign_activity.user_revenue_activity(user_transnsaction_id, recipient_id, revenue, purchase_at_timestamp)
 VALUES
 (343, 101, 100.00, '2025-01-01 09:30:00'),
 (346, 102, 200.00, '2025-01-02 11:45:00'),
