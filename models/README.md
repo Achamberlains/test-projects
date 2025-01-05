@@ -1,4 +1,4 @@
-# DBT ModelsL: Documentation
+# DBT Models: Documentation
 
 This document provides an overview of the DBT models in this project and are organized by their respective directories. Each directory represents a step in the data pipeline.
 
