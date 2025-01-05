@@ -21,17 +21,17 @@ CREATE TABLE campaign_activity.user_revenue_activity (
 --Inserting data into tables.
 INSERT INTO campaign_activity.user_campaign_activity(event_id, recipient_id, campaign_link, actions, spend, event_timestamp)
 VALUES
-(1, 101, 'httouchpointss://www.example.com?utm_campaign=last_chance&utm_medium=paid_search&utm_source=google&utm_content=footer_cta&utm_term=cashback', 'page_view', 0.50, '2025-01-01 08:00:00'),
-(2, 101, 'httouchpointss://www.example.com?utm_campaign=last_chance&utm_medium=paid_search&utm_source=google&utm_content=footer_cta&utm_term=cashback', 'click', 0.50, '2025-01-01 08:15:00'),
-(3, 101, 'httouchpointss://www.example.com?utm_campaign=last_chance&utm_medium=paid_search&utm_source=google&utm_content=footer_cta&utm_term=cashback', 'purchase', 0.50, '2025-01-01 09:30:00'),
-(4, 102, 'httouchpointss://www.example.com?utm_campaign=holiday_promo&utm_medium=paid_social&utm_source=facebook&utm_content=cta_buy_now&utm_term=save', 'page_view', 0.90, '2025-01-02 10:00:00'),
-(5, 102, 'httouchpointss://www.example.com?utm_campaign=holiday_promo&utm_medium=paid_social&utm_source=facebook&utm_content=cta_buy_now&utm_term=save', 'click', 0.90, '2025-01-02 10:30:00'),
-(6, 102, 'httouchpointss://www.example.com?utm_campaign=holiday_promo&utm_medium=paid_social&utm_source=facebook&utm_content=cta_buy_now&utm_term=save', 'purchase', 0.90, '2025-01-02 11:45:00'),
-(7, 103, 'httouchpointss://www.example.com?utm_campaign=winter_update&utm_medium=newsletter&utm_source=email&utm_content=text_ad_1&utm_term=discount', 'click', 0.75, '2025-01-03 12:00:00'),
-(8, 103, 'httouchpointss://www.example.com?utm_campaign=winter_update&utm_medium=newsletter&utm_source=email&utm_content=text_ad_1&utm_term=discount', 'purchase', 0.75, '2025-01-03 13:30:00'),
-(9, 104, 'httouchpointss://www.example.com?utm_campaign=back_to_school&utm_medium=social&utm_source=instaguser_revenuem&utm_content=text_ad_2&utm_term=discount', 'click', 0.00, '2025-01-04 09:15:00'),
-(10, 104, 'httouchpointss://www.example.com?utm_campaign=back_to_school&utm_medium=social&utm_source=facebook&utm_content=cta_shop_now&utm_term=discount', 'click', 0.00, '2025-01-04 10:30:00'),
-(11, 104, 'httouchpointss://www.example.com?utm_campaign=back_to_school&utm_medium=social&utm_source=facebook&utm_content=cta_shop_now&utm_term=discount', 'purchase', 0.00, '2025-01-04 11:45:00')
+(1, 101, 'http://www.example.com?utm_campaign=last_chance&utm_medium=paid_search&utm_source=google&utm_content=footer_cta&utm_term=cashback', 'page_view', 0.50, '2025-01-01 08:00:00'),
+(2, 101, 'http://www.example.com?utm_campaign=last_chance&utm_medium=paid_search&utm_source=google&utm_content=footer_cta&utm_term=cashback', 'click', 0.50, '2025-01-01 08:15:00'),
+(3, 101, 'http://www.example.com?utm_campaign=last_chance&utm_medium=paid_search&utm_source=google&utm_content=footer_cta&utm_term=cashback', 'purchase', 0.50, '2025-01-01 09:30:00'),
+(4, 102, 'http://www.example.com?utm_campaign=holiday_promo&utm_medium=paid_social&utm_source=facebook&utm_content=cta_buy_now&utm_term=save', 'page_view', 0.90, '2025-01-02 10:00:00'),
+(5, 102, 'http://www.example.com?utm_campaign=holiday_promo&utm_medium=paid_social&utm_source=facebook&utm_content=cta_buy_now&utm_term=save', 'click', 0.90, '2025-01-02 10:30:00'),
+(6, 102, 'http://www.example.com?utm_campaign=holiday_promo&utm_medium=paid_social&utm_source=facebook&utm_content=cta_buy_now&utm_term=save', 'purchase', 0.90, '2025-01-02 11:45:00'),
+(7, 103, 'http://www.example.com?utm_campaign=winter_update&utm_medium=newsletter&utm_source=email&utm_content=text_ad_1&utm_term=discount', 'click', 0.75, '2025-01-03 12:00:00'),
+(8, 103, 'http://www.example.com?utm_campaign=winter_update&utm_medium=newsletter&utm_source=email&utm_content=text_ad_1&utm_term=discount', 'purchase', 0.75, '2025-01-03 13:30:00'),
+(9, 104, 'http://www.example.com?utm_campaign=back_to_school&utm_medium=social&utm_source=instaguser_revenuem&utm_content=text_ad_2&utm_term=discount', 'click', 0.00, '2025-01-04 09:15:00'),
+(10, 104, 'http://www.example.com?utm_campaign=back_to_school&utm_medium=social&utm_source=facebook&utm_content=cta_shop_now&utm_term=discount', 'click', 0.00, '2025-01-04 10:30:00'),
+(11, 104, 'http://www.example.com?utm_campaign=back_to_school&utm_medium=social&utm_source=facebook&utm_content=cta_shop_now&utm_term=discount', 'purchase', 0.00, '2025-01-04 11:45:00')
 
 --Inserting data into revenue table.
 INSERT INTO campaign_activity.user_revenue_activity(user_transnsaction_id, recipient_id, revenue, purchase_at_timestamp)
