@@ -43,7 +43,6 @@ VALUES
 
 -----------------------------------------------------------------------------------------------------------------
 
--- Create a new table and then input the data.
 -- The CTEs below make up the final model
 CREATE TABLE campaign_activity.user_campaign_attribution_summary AS
 -- Calculate total spend per campaign by recipient and campaign link
